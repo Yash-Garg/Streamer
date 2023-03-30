@@ -7,6 +7,7 @@ hilt = "2.45"
 kotlin = "1.8.10"
 leanback = "1.2.0-alpha02"
 media3 = "1.0.0"
+room = "2.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 
 [libraries]
@@ -36,6 +37,10 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 media3-ui-leanback = { group = "androidx.media3", name = "media3-ui-leanback", version.ref = "media3" }
 media3-datasource-rtmp = { group = "androidx.media3", name = "media3-datasource-rtmp", version.ref = "media3" }
 media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

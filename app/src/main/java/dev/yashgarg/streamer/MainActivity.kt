@@ -7,6 +7,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
+import dev.yashgarg.streamer.ui.theme.StreamerTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -17,7 +18,9 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            StreamerApp(windowSizeClass)
+            StreamerTheme {
+                StreamerApp(windowSizeClass)
+            }
         }
     }
 }

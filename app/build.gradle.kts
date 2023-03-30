@@ -72,6 +72,10 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.material3.windowsize)
 
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+
     implementation(libs.bundles.media3)
 
     implementation(libs.google.dagger.hilt)
