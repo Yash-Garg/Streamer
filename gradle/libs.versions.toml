@@ -25,6 +25,7 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx
 
 google-dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+gson = "com.google.code.gson:gson:2.10.1"
 
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 
@@ -52,6 +53,7 @@ com-android-application = { id = "com.android.application", version.ref = "agp" 
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
 [bundles]
 media3 = ["media3-exoplayer", "media3-rtsp", "media3-ui", "media3-ui-leanback", "media3-datasource-rtmp", "media3-session"]
