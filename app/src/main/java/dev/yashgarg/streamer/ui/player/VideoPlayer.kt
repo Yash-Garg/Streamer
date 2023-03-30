@@ -1,6 +1,5 @@
 package dev.yashgarg.streamer.ui.player
 
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.Box
@@ -21,19 +20,17 @@ import dev.yashgarg.streamer.data.models.StreamConfig
 
 @Composable
 @OptIn(UnstableApi::class)
-fun VideoPlayer(modifier: Modifier = Modifier, streamUri: List<StreamConfig>) {
+fun VideoPlayer(modifier: Modifier = Modifier, streamUri: StreamConfig) {
     val context = LocalContext.current
-    Log.d("VideoPlayer", "VideoPlayer: ${streamUri.map { it.toString() }}")
 
-    val mediaSources = streamUri.map {
+    val mediaSource =
         RtspMediaSource.Factory()
-            .setForceUseRtpTcp(it.forceRtpTcp)
-            .createMediaSource(MediaItem.fromUri(it.toString()))
-    }
+            .setForceUseRtpTcp(streamUri.forceRtpTcp)
+            .createMediaSource(MediaItem.fromUri(streamUri.toString()))
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
-            setMediaSources(mediaSources)
+            setMediaSource(mediaSource)
             prepare()
             playWhenReady = true
         }
