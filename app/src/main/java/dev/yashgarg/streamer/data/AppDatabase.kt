@@ -7,7 +7,7 @@ import dev.yashgarg.streamer.data.models.StreamConfig
 
 @Database(
     entities = [StreamConfig::class],
-    version = 3,
+    version = 1,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
