@@ -16,4 +16,8 @@ data class StreamConfig(
     val username: String? = null,
     val password: String? = null,
     @ColumnInfo(defaultValue = "0") val forceRtpTcp: Boolean
-)
+) {
+    override fun toString(): String {
+        return "rtsp://$username:$password@$ip:$port/$path"
+    }
+}

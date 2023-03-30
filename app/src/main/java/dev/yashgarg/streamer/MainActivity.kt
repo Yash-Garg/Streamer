@@ -7,6 +7,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
+import dev.yashgarg.streamer.ui.StreamerApp
 import dev.yashgarg.streamer.ui.theme.StreamerTheme
 
 @AndroidEntryPoint

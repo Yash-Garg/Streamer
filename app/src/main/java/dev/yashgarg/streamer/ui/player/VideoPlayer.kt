@@ -1,5 +1,6 @@
 package dev.yashgarg.streamer.ui.player
 
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.Box
@@ -13,15 +14,21 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.ui.PlayerView
+import androidx.media3.common.util.UnstableApi
+import androidx.annotation.OptIn
+import androidx.media3.ui.PlayerView.SHOW_BUFFERING_WHEN_PLAYING
+import dev.yashgarg.streamer.data.models.StreamConfig
 
 @Composable
-@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-fun VideoPlayer(modifier: Modifier = Modifier, streamUri: List<String>) {
+@OptIn(UnstableApi::class)
+fun VideoPlayer(modifier: Modifier = Modifier, streamUri: List<StreamConfig>) {
     val context = LocalContext.current
+    Log.d("VideoPlayer", "VideoPlayer: ${streamUri.map { it.toString() }}")
 
-    val mediaSources = streamUri.map { RtspMediaSource.Factory()
-        .setForceUseRtpTcp(true)
-        .createMediaSource(MediaItem.fromUri(it))
+    val mediaSources = streamUri.map {
+        RtspMediaSource.Factory()
+            .setForceUseRtpTcp(it.forceRtpTcp)
+            .createMediaSource(MediaItem.fromUri(it.toString()))
     }
 
     val exoPlayer = remember {
@@ -39,6 +46,8 @@ fun VideoPlayer(modifier: Modifier = Modifier, streamUri: List<String>) {
             factory = {
                 PlayerView(context).apply {
                     player = exoPlayer
+                    setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
+
                     layoutParams =
                         FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams
