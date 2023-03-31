@@ -43,6 +43,11 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
             factory = {
                 PlayerView(context).apply {
                     player = exoPlayer
+                    setShowPreviousButton(false)
+                    setShowNextButton(false)
+                    setShowSubtitleButton(false)
+                    setShowFastForwardButton(false)
+                    setShowRewindButton(false)
                     setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
 
                     layoutParams =
