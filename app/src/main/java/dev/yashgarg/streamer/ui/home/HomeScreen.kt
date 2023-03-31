@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material.icons.twotone.Info
@@ -24,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,7 +54,7 @@ fun HomeScreen(
                 title = {
                     Text(
                         stringResource(R.string.app_name),
-                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp)
                     )
                 },
                 actions = {
@@ -101,16 +102,55 @@ fun HomeScreen(
                 }
             }
         } else {
-            LazyRow(modifier = Modifier.fillMaxSize().padding(it)) {
-                items(state.configs.reversed()) { config ->
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(4),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(horizontal = 12.dp, vertical = 0.dp)
+            ) {
+                items(state.configs) { config ->
                     Card(
-                        modifier = Modifier.padding(24.dp, 0.dp, 0.dp, 12.dp),
+                        modifier = Modifier
+                            .size(width = 250.dp, height = 150.dp)
+                            .padding(vertical = 12.dp, horizontal = 12.dp),
                         onClick = { onStreamClick(config) },
                     ) {
-                        Text(
-                            modifier = Modifier.padding(24.dp),
-                            text = config.streamName
-                        )
+                        Column(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp),
+                                text = config.streamName,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                softWrap = true,
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 1.dp),
+                                text = "${config.ip}:${config.port}",
+                                fontSize = 18.sp,
+                                softWrap = true,
+                            )
+                            if (config.forceRtpTcp) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    modifier = Modifier
+                                        .padding(horizontal = 1.dp),
+                                    text = "RTP TCP",
+                                    fontSize = 18.sp,
+                                    softWrap = true,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
                     }
                 }
             }
