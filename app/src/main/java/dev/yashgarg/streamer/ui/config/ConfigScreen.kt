@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.Person
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material.icons.twotone.Warning
@@ -24,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,8 +37,13 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import dev.yashgarg.streamer.R
 import dev.yashgarg.streamer.ui.ErrorTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +51,7 @@ import dev.yashgarg.streamer.ui.ErrorTextField
 fun ConfigScreen(
     modifier: Modifier = Modifier,
     viewModel: ConfigViewModel = viewModel(),
-    onConfigSaved: () -> Unit,
+    onBackNavigate: () -> Unit,
 ) {
     val context = LocalContext.current
     val state = viewModel.state
@@ -53,12 +61,28 @@ fun ConfigScreen(
         viewModel.validationEvents.collect {
             if (it is ConfigViewModel.ValidationEvent.Success) {
                 viewModel.saveConfigToDb()
-                onConfigSaved()
+                onBackNavigate()
             }
         }
     }
 
     Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Add Stream",
+                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onBackNavigate() }) {
+                        Icon(Icons.TwoTone.ArrowBack, contentDescription = null)
+                    }
+                },
+            )
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 viewModel.submitData()

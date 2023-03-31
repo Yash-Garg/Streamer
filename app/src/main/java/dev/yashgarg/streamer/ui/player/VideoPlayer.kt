@@ -20,13 +20,13 @@ import dev.yashgarg.streamer.data.models.StreamConfig
 
 @Composable
 @OptIn(UnstableApi::class)
-fun VideoPlayer(modifier: Modifier = Modifier, streamUri: StreamConfig) {
+fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
     val context = LocalContext.current
 
     val mediaSource =
         RtspMediaSource.Factory()
-            .setForceUseRtpTcp(streamUri.forceRtpTcp)
-            .createMediaSource(MediaItem.fromUri(streamUri.toString()))
+            .setForceUseRtpTcp(config.forceRtpTcp)
+            .createMediaSource(MediaItem.fromUri(config.toString()))
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
