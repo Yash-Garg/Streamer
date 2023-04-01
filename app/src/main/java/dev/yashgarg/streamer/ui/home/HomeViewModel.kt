@@ -8,28 +8,23 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.yashgarg.streamer.data.daos.ConfigDao
 import dev.yashgarg.streamer.data.models.StreamConfig
+import javax.inject.Inject
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    configDao: ConfigDao
-) : ViewModel() {
+class HomeViewModel @Inject constructor(configDao: ConfigDao) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
 
     init {
         viewModelScope.launch {
             runCatching {
-                configDao.getConfigs()
-                    .catch {
-                        state = state.copy(error = it.message, isLoading = false)
-                    }
-                    .collectLatest {
-                        state = state.copy(configs = it, isLoading = false)
-                    }
+                configDao
+                    .getConfigs()
+                    .catch { state = state.copy(error = it.message, isLoading = false) }
+                    .collectLatest { state = state.copy(configs = it, isLoading = false) }
             }
         }
     }

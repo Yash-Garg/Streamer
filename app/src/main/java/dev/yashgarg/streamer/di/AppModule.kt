@@ -17,10 +17,7 @@ class AppModule {
     @Singleton
     @Provides
     fun provideRoomDb(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.DB_NAME)
-            .build()
+        Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.DB_NAME).build()
 
-    @Singleton
-    @Provides
-    fun provideConfigDao(db: AppDatabase) = db.configDao()
+    @Singleton @Provides fun provideConfigDao(db: AppDatabase) = db.configDao()
 }

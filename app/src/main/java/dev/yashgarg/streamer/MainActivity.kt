@@ -19,9 +19,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            StreamerTheme {
-                StreamerApp(windowSizeClass)
-            }
+            StreamerTheme { StreamerApp(windowSizeClass) }
         }
     }
 }

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material.icons.twotone.GridView
 import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,29 +67,19 @@ fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = onAddClick, icon = {
-                Icon(Icons.TwoTone.Add, contentDescription = null)
-            }, text = {
-                Text("ADD STREAM")
-            })
+            ExtendedFloatingActionButton(
+                onClick = onAddClick,
+                icon = { Icon(Icons.TwoTone.Add, contentDescription = null) },
+                text = { Text("ADD STREAM") }
+            )
         },
     ) {
         if (state.isLoading) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else if (state.configs.isEmpty()) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -106,28 +95,23 @@ fun HomeScreen(
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .padding(horizontal = 12.dp, vertical = 0.dp)
+                modifier =
+                    Modifier.fillMaxSize().padding(it).padding(horizontal = 12.dp, vertical = 0.dp)
             ) {
                 items(state.configs) { config ->
                     Card(
-                        modifier = Modifier
-                            .size(width = 250.dp, height = 150.dp)
-                            .padding(vertical = 12.dp, horizontal = 12.dp),
+                        modifier =
+                            Modifier.size(width = 250.dp, height = 150.dp)
+                                .padding(vertical = 12.dp, horizontal = 12.dp),
                         onClick = { onStreamClick(config) },
                     ) {
                         Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(vertical = 16.dp),
+                            Modifier.fillMaxSize().padding(vertical = 16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp),
+                                modifier = Modifier.padding(horizontal = 16.dp),
                                 text = config.streamName,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
@@ -135,8 +119,7 @@ fun HomeScreen(
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 1.dp),
+                                modifier = Modifier.padding(horizontal = 1.dp),
                                 text = "${config.ip}:${config.port}",
                                 fontSize = 18.sp,
                                 softWrap = true,
@@ -144,8 +127,7 @@ fun HomeScreen(
                             if (config.forceRtpTcp) {
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    modifier = Modifier
-                                        .padding(horizontal = 1.dp),
+                                    modifier = Modifier.padding(horizontal = 1.dp),
                                     text = "RTP TCP",
                                     fontSize = 18.sp,
                                     softWrap = true,

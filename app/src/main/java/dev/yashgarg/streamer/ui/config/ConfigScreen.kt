@@ -14,13 +14,10 @@ import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.Person
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
-import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -34,16 +31,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.yashgarg.streamer.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.yashgarg.streamer.ui.ErrorTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,28 +79,22 @@ fun ConfigScreen(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = {
-                viewModel.submitData()
-            }, icon = {
-                Icon(Icons.TwoTone.Check, contentDescription = null)
-            }, text = {
-                Text("SAVE CONFIG")
-            })
-        }) { paddingValues ->
+            ExtendedFloatingActionButton(
+                onClick = { viewModel.submitData() },
+                icon = { Icon(Icons.TwoTone.Check, contentDescription = null) },
+                text = { Text("SAVE CONFIG") }
+            )
+        }
+    ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp, 0.dp)
-                .then(modifier),
+            modifier =
+                Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp).then(modifier),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.streamName,
                 isError = state.streamNameError != null,
-                onValueChange = {
-                    viewModel.onEvent(ConfigFormEvent.StreamNameChanged(it))
-                },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.StreamNameChanged(it)) },
                 label = "Stream Name",
                 errorMessage = state.streamNameError,
             )
@@ -114,9 +103,7 @@ fun ConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.ip,
                 isError = state.ipError != null,
-                onValueChange = {
-                    viewModel.onEvent(ConfigFormEvent.ipChanged(it))
-                },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.ipChanged(it)) },
                 label = "IP or Base URL",
                 errorMessage = state.ipError,
             )
@@ -127,9 +114,7 @@ fun ConfigScreen(
                     value = state.path,
                     leadingIcon = { Text("/") },
                     isError = state.pathError != null,
-                    onValueChange = {
-                        viewModel.onEvent(ConfigFormEvent.pathChanged(it))
-                    },
+                    onValueChange = { viewModel.onEvent(ConfigFormEvent.pathChanged(it)) },
                     label = "Path",
                     errorMessage = state.pathError,
                 )
@@ -139,9 +124,7 @@ fun ConfigScreen(
                     value = state.port,
                     leadingIcon = { Text(":") },
                     isError = state.portError != null,
-                    onValueChange = {
-                        viewModel.onEvent(ConfigFormEvent.portChanged(it))
-                    },
+                    onValueChange = { viewModel.onEvent(ConfigFormEvent.portChanged(it)) },
                     label = "Port",
                     errorMessage = state.portError,
                     keyboardType = KeyboardType.Number,
@@ -153,15 +136,10 @@ fun ConfigScreen(
                     modifier = Modifier.weight(.5f),
                     value = state.username ?: "",
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.Person,
-                            contentDescription = null
-                        )
+                        Icon(imageVector = Icons.TwoTone.Person, contentDescription = null)
                     },
                     isError = state.usernameError != null,
-                    onValueChange = {
-                        viewModel.onEvent(ConfigFormEvent.usernameChanged(it))
-                    },
+                    onValueChange = { viewModel.onEvent(ConfigFormEvent.usernameChanged(it)) },
                     label = "Username",
                     errorMessage = state.usernameError,
                 )
@@ -170,15 +148,10 @@ fun ConfigScreen(
                     modifier = Modifier.weight(.5f),
                     value = state.password ?: "",
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.Password,
-                            contentDescription = null
-                        )
+                        Icon(imageVector = Icons.TwoTone.Password, contentDescription = null)
                     },
                     isError = state.passwordError != null,
-                    onValueChange = {
-                        viewModel.onEvent(ConfigFormEvent.passwordChanged(it))
-                    },
+                    onValueChange = { viewModel.onEvent(ConfigFormEvent.passwordChanged(it)) },
                     label = "Password",
                     errorMessage = state.passwordError,
                     keyboardType = KeyboardType.Password,
@@ -186,7 +159,8 @@ fun ConfigScreen(
                     trailingIcon = {
                         IconButton(onClick = { passwordHidden = !passwordHidden }) {
                             val visibilityIcon =
-                                if (passwordHidden) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                                if (passwordHidden) Icons.TwoTone.Visibility
+                                else Icons.TwoTone.VisibilityOff
                             val description =
                                 if (passwordHidden) "Show password" else "Hide password"
                             Icon(imageVector = visibilityIcon, contentDescription = description)
@@ -204,9 +178,7 @@ fun ConfigScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = state.forceRtpTcp,
-                    onCheckedChange = {
-                        viewModel.onEvent(ConfigFormEvent.forceRtpTcpChanged(it))
-                    },
+                    onCheckedChange = { viewModel.onEvent(ConfigFormEvent.forceRtpTcpChanged(it)) },
                 )
             }
         }

@@ -1,10 +1,7 @@
 package dev.yashgarg.streamer.ui
 
-import android.graphics.drawable.Icon
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +33,8 @@ fun ErrorTextField(
         label = { Text(label) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
-        visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation =
+            if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
         trailingIcon = trailingIcon
     )
 }

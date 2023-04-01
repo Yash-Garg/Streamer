@@ -11,8 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "configs")
 data class StreamConfig(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("config_id") val configId: Int = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo("config_id") val configId: Int = 0,
     val streamName: String,
     val ip: String,
     val port: Int,
