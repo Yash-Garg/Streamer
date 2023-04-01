@@ -1,8 +1,7 @@
 package dev.yashgarg.streamer.ui.player
 
-import android.view.ViewGroup
+import android.view.SurfaceView
 import android.widget.FrameLayout
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -15,50 +14,67 @@ import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.ui.PlayerView
 import androidx.media3.common.util.UnstableApi
 import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.ui.PlayerView.SHOW_BUFFERING_WHEN_PLAYING
 import dev.yashgarg.streamer.data.models.StreamConfig
 
 @Composable
 @OptIn(UnstableApi::class)
-fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
+fun VideoPlayer(
+    modifier: Modifier = Modifier,
+    config: StreamConfig
+) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+
+    val screenHeight = configuration.screenHeightDp
+    val screenWidth = configuration.screenWidthDp
+
+    val surface = SurfaceView(context)
 
     val mediaSource =
         RtspMediaSource.Factory()
             .setForceUseRtpTcp(config.forceRtpTcp)
             .createMediaSource(MediaItem.fromUri(config.toString()))
 
+    val renderer = DefaultRenderersFactory(context).apply {
+        setEnableDecoderFallback(true)
+        setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
+    }
+
     val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
+        ExoPlayer.Builder(context, renderer).build().apply {
             setMediaSource(mediaSource)
+            setVideoSurfaceView(surface)
+            setVideoSurfaceHolder(surface.holder)
             prepare()
             playWhenReady = true
         }
     }
 
-    Box(modifier = modifier) {
-        DisposableEffect(Unit) { onDispose { exoPlayer.release() } }
-
-        AndroidView(
-            factory = {
-                PlayerView(context).apply {
-                    player = exoPlayer
-                    setShowPreviousButton(false)
-                    setShowNextButton(false)
-                    setShowSubtitleButton(false)
-                    setShowFastForwardButton(false)
-                    setShowRewindButton(false)
-                    setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
-
-                    layoutParams =
-                        FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams
-                                .MATCH_PARENT,
-                            ViewGroup.LayoutParams
-                                .MATCH_PARENT
-                        )
-                }
-            }
-        )
+    DisposableEffect(Unit) {
+        onDispose { exoPlayer.release() }
     }
+
+    AndroidView(
+        modifier = Modifier.fillMaxSize().then(modifier),
+        factory = {
+            PlayerView(context).apply {
+                player = exoPlayer
+                useController = false
+                layoutParams = FrameLayout.LayoutParams(screenWidth, screenHeight)
+
+                setShowPreviousButton(false)
+                setShowNextButton(false)
+                setShowSubtitleButton(false)
+                setShowFastForwardButton(false)
+                setShowRewindButton(false)
+                setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
+            }
+        }
+    )
 }
