@@ -19,6 +19,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.rtsp.RtspMediaSource
+import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.SHOW_BUFFERING_WHEN_PLAYING
 import dev.yashgarg.streamer.data.models.StreamConfig
@@ -63,6 +64,7 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
             setMediaSource(mediaSource)
             setVideoSurfaceView(surface)
             setVideoSurfaceHolder(surface.holder)
+            addAnalyticsListener(EventLogger())
             addListener(listener)
             prepare()
             playWhenReady = true
