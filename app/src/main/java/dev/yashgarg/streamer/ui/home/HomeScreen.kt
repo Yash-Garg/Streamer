@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
+import androidx.compose.material.icons.twotone.GridView
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.Card
@@ -43,7 +44,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(),
     onAddClick: () -> Unit,
-    onStreamClick: (StreamConfig) -> Unit
+    onStreamClick: (StreamConfig) -> Unit,
+    onGridClick: () -> Unit
 ) {
     val state = viewModel.state
 
@@ -58,8 +60,8 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.TwoTone.Settings, contentDescription = null)
+                    IconButton(onClick = { onGridClick() }) {
+                        Icon(Icons.TwoTone.GridView, contentDescription = null)
                     }
                 },
             )

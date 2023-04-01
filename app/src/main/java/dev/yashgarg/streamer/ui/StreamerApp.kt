@@ -44,6 +44,9 @@ fun StreamerApp(windowSizeClass: WindowSizeClass) {
                     onStreamClick = { config ->
                         val json = Uri.encode(Gson().toJson(config))
                         navController.navigate("${NavDestinations.PlayerScreen.route}/$json")
+                    },
+                    onGridClick = {
+                        navController.navigate(NavDestinations.GridPlayerScreen.route)
                     }
                 )
             }
@@ -64,6 +67,11 @@ fun StreamerApp(windowSizeClass: WindowSizeClass) {
             ) { backstack ->
                 val streamConfig = backstack.arguments?.getParcelable<StreamConfig>("config")
                 streamConfig?.let { VideoPlayer(config = it) }
+            }
+
+            composable(NavDestinations.GridPlayerScreen.route) {
+                val homeViewModel = hiltViewModel<HomeViewModel>()
+                GridPlayer(viewModel = homeViewModel)
             }
         }
     }

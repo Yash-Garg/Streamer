@@ -7,15 +7,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.yashgarg.streamer.data.models.StreamConfig
+import dev.yashgarg.streamer.ui.home.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("AuthLeak")
 @Composable
-fun GridPlayer(configs: List<StreamConfig>) {
-    LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2)) {
-        items(configs) {
-            VideoPlayer(config = it)
+fun GridPlayer(
+    viewModel: HomeViewModel = viewModel()
+) {
+    val state = viewModel.state
+    if (!state.isLoading || state.configs.isNotEmpty()) {
+        LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2)) {
+            items(state.configs) { VideoPlayer(config = it) }
         }
     }
 }
