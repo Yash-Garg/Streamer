@@ -2,6 +2,7 @@ package dev.yashgarg.streamer.ui.player
 
 import android.view.SurfaceView
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -12,6 +13,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
@@ -42,11 +45,25 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
             setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
         }
 
+    val listener =
+        object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                Toast.makeText(
+                        context,
+                        "Stream ${config.configId}: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+                super.onPlayerError(error)
+            }
+        }
+
     val exoPlayer = remember {
         ExoPlayer.Builder(context, renderer).build().apply {
             setMediaSource(mediaSource)
             setVideoSurfaceView(surface)
             setVideoSurfaceHolder(surface.holder)
+            addListener(listener)
             prepare()
             playWhenReady = true
         }

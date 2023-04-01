@@ -12,9 +12,15 @@ import dev.yashgarg.streamer.ui.home.HomeViewModel
 @Composable
 fun GridPlayer(viewModel: HomeViewModel = viewModel()) {
     val state = viewModel.state
+
     if (!state.isLoading || state.configs.isNotEmpty()) {
+        val configs =
+            if (state.configs.size > 4) {
+                state.configs.subList(0, 4)
+            } else state.configs
+
         LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2)) {
-            items(state.configs) { VideoPlayer(config = it) }
+            items(configs) { VideoPlayer(config = it) }
         }
     }
 }
