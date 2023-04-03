@@ -79,6 +79,7 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
             PlayerView(context).apply {
                 player = exoPlayer
                 useController = false
+                keepScreenOn = true
                 layoutParams = FrameLayout.LayoutParams(screenWidth, screenHeight)
 
                 setShowPreviousButton(false)
