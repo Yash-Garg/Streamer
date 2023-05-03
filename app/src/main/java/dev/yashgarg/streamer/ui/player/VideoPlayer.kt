@@ -5,6 +5,7 @@ import android.view.SurfaceView
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -77,10 +78,12 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
 
     AndroidView(
         modifier =
-            modifier.fillMaxSize().onKeyEvent {
-                Log.d("VideoPlayer", "onKeyEvent: $it")
-                true
-            },
+            Modifier.fillMaxSize(1f)
+                .aspectRatio(16 / 9f, matchHeightConstraintsFirst = true)
+                .onKeyEvent {
+                    Log.d("VideoPlayer", "onKeyEvent: $it")
+                    true
+                },
         factory = {
             PlayerView(context).apply {
                 player = exoPlayer
