@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.Person
+import androidx.compose.material.icons.twotone.SettingsEthernet
+import androidx.compose.material.icons.twotone.Tag
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +56,9 @@ fun ConfigScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state
+    val appBarState = rememberTopAppBarState()
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(context) {
@@ -62,7 +71,7 @@ fun ConfigScreen(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -76,6 +85,7 @@ fun ConfigScreen(
                         Icon(Icons.TwoTone.ArrowBack, contentDescription = null)
                     }
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
@@ -88,12 +98,16 @@ fun ConfigScreen(
     ) { paddingValues ->
         Column(
             modifier =
-                Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp).then(modifier),
+                Modifier.verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(24.dp, 0.dp),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.streamName,
                 isError = state.streamNameError != null,
+                leadingIcon = { Icon(imageVector = Icons.TwoTone.Tag, contentDescription = null) },
                 onValueChange = { viewModel.onEvent(ConfigFormEvent.StreamNameChanged(it)) },
                 label = "Stream Name",
                 errorMessage = state.streamNameError,
@@ -103,74 +117,70 @@ fun ConfigScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.ip,
                 isError = state.ipError != null,
+                leadingIcon = {
+                    Icon(imageVector = Icons.TwoTone.SettingsEthernet, contentDescription = null)
+                },
                 onValueChange = { viewModel.onEvent(ConfigFormEvent.ipChanged(it)) },
-                label = "IP or Base URL",
+                label = "IP / URL",
                 errorMessage = state.ipError,
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ErrorTextField(
-                    modifier = Modifier.weight(.8f),
-                    value = state.path,
-                    leadingIcon = { Text("/") },
-                    isError = state.pathError != null,
-                    onValueChange = { viewModel.onEvent(ConfigFormEvent.pathChanged(it)) },
-                    label = "Path",
-                    errorMessage = state.pathError,
-                )
-                Spacer(modifier = Modifier.width(18.dp))
-                ErrorTextField(
-                    modifier = Modifier.weight(.2f),
-                    value = state.port,
-                    leadingIcon = { Text(":") },
-                    isError = state.portError != null,
-                    onValueChange = { viewModel.onEvent(ConfigFormEvent.portChanged(it)) },
-                    label = "Port",
-                    errorMessage = state.portError,
-                    keyboardType = KeyboardType.Number,
-                )
-            }
+            ErrorTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.path,
+                leadingIcon = { Text("/") },
+                isError = state.pathError != null,
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.pathChanged(it)) },
+                label = "Path",
+                errorMessage = state.pathError,
+            )
             Spacer(modifier = Modifier.height(12.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ErrorTextField(
-                    modifier = Modifier.weight(.5f),
-                    value = state.username ?: "",
-                    leadingIcon = {
-                        Icon(imageVector = Icons.TwoTone.Person, contentDescription = null)
-                    },
-                    isError = state.usernameError != null,
-                    onValueChange = { viewModel.onEvent(ConfigFormEvent.usernameChanged(it)) },
-                    label = "Username",
-                    errorMessage = state.usernameError,
-                )
-                Spacer(modifier = Modifier.width(18.dp))
-                ErrorTextField(
-                    modifier = Modifier.weight(.5f),
-                    value = state.password ?: "",
-                    leadingIcon = {
-                        Icon(imageVector = Icons.TwoTone.Password, contentDescription = null)
-                    },
-                    isError = state.passwordError != null,
-                    onValueChange = { viewModel.onEvent(ConfigFormEvent.passwordChanged(it)) },
-                    label = "Password",
-                    errorMessage = state.passwordError,
-                    keyboardType = KeyboardType.Password,
-                    passwordHidden = passwordHidden,
-                    trailingIcon = {
-                        IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                            val visibilityIcon =
-                                if (passwordHidden) Icons.TwoTone.Visibility
-                                else Icons.TwoTone.VisibilityOff
-                            val description =
-                                if (passwordHidden) "Show password" else "Hide password"
-                            Icon(imageVector = visibilityIcon, contentDescription = description)
-                        }
+            ErrorTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.port,
+                leadingIcon = { Text(":") },
+                isError = state.portError != null,
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.portChanged(it)) },
+                label = "Port",
+                errorMessage = state.portError,
+                keyboardType = KeyboardType.Number,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            ErrorTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.username ?: "",
+                leadingIcon = {
+                    Icon(imageVector = Icons.TwoTone.Person, contentDescription = null)
+                },
+                isError = state.usernameError != null,
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.usernameChanged(it)) },
+                label = "Username",
+                errorMessage = state.usernameError,
+            )
+            ErrorTextField(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                value = state.password ?: "",
+                leadingIcon = {
+                    Icon(imageVector = Icons.TwoTone.Password, contentDescription = null)
+                },
+                isError = state.passwordError != null,
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.passwordChanged(it)) },
+                label = "Password",
+                errorMessage = state.passwordError,
+                keyboardType = KeyboardType.Password,
+                passwordHidden = passwordHidden,
+                trailingIcon = {
+                    IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                        val visibilityIcon =
+                            if (passwordHidden) Icons.TwoTone.Visibility
+                            else Icons.TwoTone.VisibilityOff
+                        val description = if (passwordHidden) "Show password" else "Hide password"
+                        Icon(imageVector = visibilityIcon, contentDescription = description)
                     }
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+                }
+            )
             Row(
-                modifier = Modifier.fillMaxWidth().padding(12.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {

@@ -38,6 +38,7 @@ fun StreamerApp(windowSizeClass: WindowSizeClass) {
                 val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     viewModel = homeViewModel,
+                    windowSizeClass = windowSizeClass,
                     onAddClick = { navController.navigate(NavDestinations.ConfigScreen.route) },
                     onStreamClick = { config ->
                         val json = Uri.encode(Gson().toJson(config))

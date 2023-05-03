@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import dev.yashgarg.streamer.data.models.StreamConfig
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
     viewModel: HomeViewModel = viewModel(),
     onAddClick: () -> Unit,
     onStreamClick: (StreamConfig) -> Unit,
@@ -94,9 +96,9 @@ fun HomeScreen(
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Adaptive(200.dp),
                 modifier =
-                    Modifier.fillMaxSize().padding(it).padding(horizontal = 12.dp, vertical = 0.dp)
+                    Modifier.fillMaxSize().padding(it).padding(horizontal = 12.dp, vertical = 0.dp),
             ) {
                 items(state.configs) { config ->
                     Card(

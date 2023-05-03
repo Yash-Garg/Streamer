@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import dev.yashgarg.streamer.data.daos.ConfigDao
 import dev.yashgarg.streamer.data.models.StreamConfig
 
-@Database(entities = [StreamConfig::class], version = 1)
+@Database(entities = [StreamConfig::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun configDao(): ConfigDao
 

@@ -1,5 +1,6 @@
 package dev.yashgarg.streamer.ui.player
 
+import android.util.Log
 import android.view.SurfaceView
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -74,7 +76,11 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
     DisposableEffect(Unit) { onDispose { exoPlayer.release() } }
 
     AndroidView(
-        modifier = Modifier.fillMaxSize().then(modifier),
+        modifier =
+            modifier.fillMaxSize().onKeyEvent {
+                Log.d("VideoPlayer", "onKeyEvent: $it")
+                true
+            },
         factory = {
             PlayerView(context).apply {
                 player = exoPlayer
