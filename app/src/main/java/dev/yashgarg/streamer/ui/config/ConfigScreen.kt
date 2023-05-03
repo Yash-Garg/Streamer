@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
@@ -27,8 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +33,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,9 +51,7 @@ fun ConfigScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state
-    val appBarState = rememberTopAppBarState()
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(context) {
@@ -71,7 +64,7 @@ fun ConfigScreen(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
@@ -85,7 +78,6 @@ fun ConfigScreen(
                         Icon(Icons.TwoTone.ArrowBack, contentDescription = null)
                     }
                 },
-                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
@@ -97,11 +89,7 @@ fun ConfigScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier.verticalScroll(rememberScrollState())
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(24.dp, 0.dp),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
