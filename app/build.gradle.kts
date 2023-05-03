@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
+    implementation(libs.ui.accompanist.systemuicontroller)
     implementation(libs.material3)
     implementation(libs.material3.windowsize)
 
