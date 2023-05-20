@@ -25,10 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Streamer"
         tools:targetApi="tiramisu">
+
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|navigation"
             android:exported="true"
+            android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Streamer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

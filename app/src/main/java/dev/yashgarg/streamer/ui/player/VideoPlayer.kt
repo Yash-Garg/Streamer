@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.SurfaceView
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,15 +28,19 @@ import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.SHOW_BUFFERING_WHEN_PLAYING
 import dev.yashgarg.streamer.data.models.StreamConfig
+import dev.yashgarg.streamer.pip.enterPip
 
 @Composable
 @OptIn(UnstableApi::class)
-fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
+fun VideoPlayer(enablePip: Boolean, config: StreamConfig) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
+
+    val ratio =
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 16 / 9f else 9 / 16f
 
     val surface = SurfaceView(context)
 
@@ -75,8 +80,26 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
         }
     }
 
-    val ratio =
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 16 / 9f else 9 / 16f
+    val defaultPlayerView = remember {
+        PlayerView(context).apply {
+            player = exoPlayer
+            useController = false
+            keepScreenOn = true
+            layoutParams = FrameLayout.LayoutParams(screenWidth, screenHeight)
+
+            setShowPreviousButton(false)
+            setShowNextButton(false)
+            setShowSubtitleButton(false)
+            setShowFastForwardButton(false)
+            setShowRewindButton(false)
+            setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
+        }
+    }
+
+    BackHandler(enablePip) {
+        enterPip(context, defaultPlayerView)
+        exoPlayer.play()
+    }
 
     DisposableEffect(Unit) { onDispose { exoPlayer.release() } }
 
@@ -88,20 +111,6 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
                     Log.d("VideoPlayer", "onKeyEvent: $it")
                     true
                 },
-        factory = {
-            PlayerView(context).apply {
-                player = exoPlayer
-                useController = false
-                keepScreenOn = true
-                layoutParams = FrameLayout.LayoutParams(screenWidth, screenHeight)
-
-                setShowPreviousButton(false)
-                setShowNextButton(false)
-                setShowSubtitleButton(false)
-                setShowFastForwardButton(false)
-                setShowRewindButton(false)
-                setShowBuffering(SHOW_BUFFERING_WHEN_PLAYING)
-            }
-        }
+        factory = { defaultPlayerView }
     )
 }
