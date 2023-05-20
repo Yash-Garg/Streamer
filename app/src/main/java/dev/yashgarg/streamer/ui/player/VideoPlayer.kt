@@ -1,5 +1,6 @@
 package dev.yashgarg.streamer.ui.player
 
+import android.content.res.Configuration
 import android.util.Log
 import android.view.SurfaceView
 import android.widget.FrameLayout
@@ -74,12 +75,15 @@ fun VideoPlayer(modifier: Modifier = Modifier, config: StreamConfig) {
         }
     }
 
+    val ratio =
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 16 / 9f else 9 / 16f
+
     DisposableEffect(Unit) { onDispose { exoPlayer.release() } }
 
     AndroidView(
         modifier =
             Modifier.fillMaxSize(1f)
-                .aspectRatio(16 / 9f, matchHeightConstraintsFirst = true)
+                .aspectRatio(ratio, matchHeightConstraintsFirst = true)
                 .onKeyEvent {
                     Log.d("VideoPlayer", "onKeyEvent: $it")
                     true
