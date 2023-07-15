@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -45,9 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.tv.foundation.lazy.grid.TvGridCells
-import androidx.tv.foundation.lazy.grid.TvLazyVerticalGrid
-import androidx.tv.foundation.lazy.grid.items
+import androidx.tv.foundation.lazy.grid.itemsIndexed
 import dev.yashgarg.streamer.R
 import dev.yashgarg.streamer.data.models.StreamConfig
 
@@ -66,8 +67,6 @@ fun HomeScreen(
     onGridClick: () -> Unit
 ) {
     val state = viewModel.state
-    val showRemoveDialog = remember { mutableStateOf(false) }
-    val selectedConfig = remember { mutableStateOf<StreamConfig?>(null) }
     val pullRefreshState = rememberPullRefreshState(state.isLoading, { viewModel.refresh() })
 
     Scaffold(
@@ -113,11 +112,16 @@ fun HomeScreen(
                 }
             }
 
-            TvLazyVerticalGrid(
-                columns = TvGridCells.Adaptive(200.dp),
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(200.dp),
                 modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 0.dp),
             ) {
-                items(state.configs) { config ->
+                itemsIndexed(
+                    state.configs,
+                    key = { pos, config -> "${config.configId}_${pos}_${config.path}" }
+                ) { _, config ->
+                    val showRemoveDialog = remember { mutableStateOf(false) }
+
                     Card(
                         modifier =
                             Modifier.size(width = 250.dp, height = 150.dp)
@@ -126,10 +130,7 @@ fun HomeScreen(
                                 .combinedClickable(
                                     enabled = true,
                                     onClick = { onStreamClick(config) },
-                                    onLongClick = {
-                                        selectedConfig.value = config
-                                        showRemoveDialog.value = true
-                                    }
+                                    onLongClick = { showRemoveDialog.value = true }
                                 ),
                     ) {
                         Column(
@@ -163,6 +164,14 @@ fun HomeScreen(
                             }
                         }
                     }
+
+                    if (showRemoveDialog.value) {
+                        RemoveStreamDialog(
+                            title = "Remove ${config.streamName} stream?",
+                            onDismiss = { showRemoveDialog.value = false },
+                            onConfirm = { viewModel.removeStreamConfig(config) }
+                        )
+                    }
                 }
             }
 
@@ -173,17 +182,6 @@ fun HomeScreen(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 contentColor = contentColorFor(MaterialTheme.colorScheme.surface),
             )
-
-            if (showRemoveDialog.value) {
-                RemoveStreamDialog(
-                    title = "Remove ${selectedConfig.value?.streamName} stream?",
-                    onDismiss = {
-                        selectedConfig.value = null
-                        showRemoveDialog.value = false
-                    },
-                    onConfirm = { selectedConfig.value?.let { viewModel.removeStreamConfig(it) } }
-                )
-            }
         }
     }
 }
