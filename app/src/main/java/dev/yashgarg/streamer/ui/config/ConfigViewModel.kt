@@ -26,22 +26,22 @@ class ConfigViewModel @Inject constructor(private val configDao: ConfigDao) : Vi
             is ConfigFormEvent.StreamNameChanged -> {
                 state = state.copy(streamName = event.name)
             }
-            is ConfigFormEvent.ipChanged -> {
+            is ConfigFormEvent.IpChanged -> {
                 state = state.copy(ip = event.ip)
             }
-            is ConfigFormEvent.pathChanged -> {
+            is ConfigFormEvent.PathChanged -> {
                 state = state.copy(path = event.path)
             }
-            is ConfigFormEvent.portChanged -> {
+            is ConfigFormEvent.PortChanged -> {
                 state = state.copy(port = event.port)
             }
-            is ConfigFormEvent.usernameChanged -> {
+            is ConfigFormEvent.UsernameChanged -> {
                 state = state.copy(username = event.username)
             }
-            is ConfigFormEvent.passwordChanged -> {
+            is ConfigFormEvent.PasswordChanged -> {
                 state = state.copy(password = event.password)
             }
-            is ConfigFormEvent.forceRtpTcpChanged -> {
+            is ConfigFormEvent.ForceRtpTcpChanged -> {
                 state = state.copy(forceRtpTcp = event.forceRtpTcp)
             }
             ConfigFormEvent.Save -> submitData()

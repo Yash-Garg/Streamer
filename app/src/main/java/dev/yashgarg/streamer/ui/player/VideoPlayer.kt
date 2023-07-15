@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.SurfaceView
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,11 +27,10 @@ import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.SHOW_BUFFERING_WHEN_PLAYING
 import dev.yashgarg.streamer.data.models.StreamConfig
-import dev.yashgarg.streamer.pip.enterPip
 
 @Composable
 @OptIn(UnstableApi::class)
-fun VideoPlayer(enablePip: Boolean, config: StreamConfig) {
+fun VideoPlayer(config: StreamConfig) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
@@ -40,7 +38,7 @@ fun VideoPlayer(enablePip: Boolean, config: StreamConfig) {
     val screenWidth = configuration.screenWidthDp
 
     val ratio =
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 16 / 9f else 9 / 16f
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 16 / 9f else 1f
 
     val surface = SurfaceView(context)
 
@@ -96,17 +94,16 @@ fun VideoPlayer(enablePip: Boolean, config: StreamConfig) {
         }
     }
 
-    BackHandler(enablePip) {
-        enterPip(context, defaultPlayerView)
-        exoPlayer.play()
-    }
-
     DisposableEffect(Unit) { onDispose { exoPlayer.release() } }
 
     AndroidView(
         modifier =
             Modifier.fillMaxSize(1f)
-                .aspectRatio(ratio, matchHeightConstraintsFirst = true)
+                .aspectRatio(
+                    ratio,
+                    matchHeightConstraintsFirst =
+                        configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                )
                 .onKeyEvent {
                     Log.d("VideoPlayer", "onKeyEvent: $it")
                     true

@@ -15,4 +15,7 @@ interface ConfigDao {
     suspend fun getConfigAtIndex(index: Int = 0): StreamConfig?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun addConfig(config: StreamConfig)
+
+    @Query("DELETE FROM configs WHERE config_id = :index")
+    suspend fun deleteConfigAtIndex(index: Int = 0)
 }

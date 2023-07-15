@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(configDao: ConfigDao) : ViewModel() {
+class HomeViewModel @Inject constructor(private val configDao: ConfigDao) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
 
@@ -27,6 +27,10 @@ class HomeViewModel @Inject constructor(configDao: ConfigDao) : ViewModel() {
                     .collectLatest { state = state.copy(configs = it, isLoading = false) }
             }
         }
+    }
+
+    fun removeStreamConfig(config: StreamConfig) {
+        viewModelScope.launch { runCatching { configDao.deleteConfigAtIndex(config.configId) } }
     }
 }
 

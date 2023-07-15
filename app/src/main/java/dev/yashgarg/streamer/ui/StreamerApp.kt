@@ -61,7 +61,7 @@ fun StreamerApp(windowSizeClass: WindowSizeClass) {
                 arguments = listOf(navArgument("config") { type = AssetParamType() })
             ) { backstack ->
                 val streamConfig = backstack.arguments?.getParcelable<StreamConfig>("config")
-                streamConfig?.let { VideoPlayer(enablePip = true, config = it) }
+                streamConfig?.let { VideoPlayer(config = it) }
             }
 
             composable(NavDestinations.GridPlayerScreen.route) {

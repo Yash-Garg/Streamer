@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
@@ -51,6 +53,7 @@ fun ConfigScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state
+    val scrollState = rememberScrollState()
 
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
@@ -89,7 +92,11 @@ fun ConfigScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp),
+            modifier =
+                Modifier.fillMaxSize()
+                    .verticalScroll(scrollState, reverseScrolling = true)
+                    .padding(paddingValues)
+                    .padding(24.dp, 0.dp),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -108,7 +115,7 @@ fun ConfigScreen(
                 leadingIcon = {
                     Icon(imageVector = Icons.TwoTone.SettingsEthernet, contentDescription = null)
                 },
-                onValueChange = { viewModel.onEvent(ConfigFormEvent.ipChanged(it)) },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.IpChanged(it)) },
                 label = "IP / URL",
                 errorMessage = state.ipError,
             )
@@ -118,7 +125,7 @@ fun ConfigScreen(
                 value = state.path,
                 leadingIcon = { Text("/") },
                 isError = state.pathError != null,
-                onValueChange = { viewModel.onEvent(ConfigFormEvent.pathChanged(it)) },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.PathChanged(it)) },
                 label = "Path",
                 errorMessage = state.pathError,
             )
@@ -128,7 +135,7 @@ fun ConfigScreen(
                 value = state.port,
                 leadingIcon = { Text(":") },
                 isError = state.portError != null,
-                onValueChange = { viewModel.onEvent(ConfigFormEvent.portChanged(it)) },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.PortChanged(it)) },
                 label = "Port",
                 errorMessage = state.portError,
                 keyboardType = KeyboardType.Number,
@@ -141,7 +148,7 @@ fun ConfigScreen(
                     Icon(imageVector = Icons.TwoTone.Person, contentDescription = null)
                 },
                 isError = state.usernameError != null,
-                onValueChange = { viewModel.onEvent(ConfigFormEvent.usernameChanged(it)) },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.UsernameChanged(it)) },
                 label = "Username",
                 errorMessage = state.usernameError,
             )
@@ -152,7 +159,7 @@ fun ConfigScreen(
                     Icon(imageVector = Icons.TwoTone.Password, contentDescription = null)
                 },
                 isError = state.passwordError != null,
-                onValueChange = { viewModel.onEvent(ConfigFormEvent.passwordChanged(it)) },
+                onValueChange = { viewModel.onEvent(ConfigFormEvent.PasswordChanged(it)) },
                 label = "Password",
                 errorMessage = state.passwordError,
                 keyboardType = KeyboardType.Password,
@@ -176,9 +183,10 @@ fun ConfigScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = state.forceRtpTcp,
-                    onCheckedChange = { viewModel.onEvent(ConfigFormEvent.forceRtpTcpChanged(it)) },
+                    onCheckedChange = { viewModel.onEvent(ConfigFormEvent.ForceRtpTcpChanged(it)) },
                 )
             }
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

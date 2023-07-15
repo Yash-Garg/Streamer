@@ -30,7 +30,7 @@ fun GridPlayer(viewModel: HomeViewModel = viewModel()) {
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(cols)) {
-                items(configs) { VideoPlayer(enablePip = false, config = it) }
+                items(configs) { VideoPlayer(config = it) }
             }
         }
     }
