@@ -1,6 +1,7 @@
 package dev.yashgarg.streamer.data.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,6 +17,5 @@ interface ConfigDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun addConfig(config: StreamConfig)
 
-    @Query("DELETE FROM configs WHERE config_id = :index")
-    suspend fun deleteConfigAtIndex(index: Int = 0)
+    @Delete(entity = StreamConfig::class) suspend fun deleteConfig(config: StreamConfig)
 }

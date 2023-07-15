@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.yashgarg.streamer.data.daos.ConfigDao
 import dev.yashgarg.streamer.data.models.StreamConfig
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -19,7 +20,12 @@ class HomeViewModel @Inject constructor(private val configDao: ConfigDao) : View
         private set
 
     init {
+        refresh()
+    }
+
+    fun refresh() {
         viewModelScope.launch {
+            delay(1000L)
             runCatching {
                 configDao
                     .getConfigs()
@@ -30,7 +36,7 @@ class HomeViewModel @Inject constructor(private val configDao: ConfigDao) : View
     }
 
     fun removeStreamConfig(config: StreamConfig) {
-        viewModelScope.launch { runCatching { configDao.deleteConfigAtIndex(config.configId) } }
+        viewModelScope.launch { runCatching { configDao.deleteConfig(config) } }
     }
 }
 

@@ -13,22 +13,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material.icons.twotone.GridView
 import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +49,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.yashgarg.streamer.R
 import dev.yashgarg.streamer.data.models.StreamConfig
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -56,6 +65,7 @@ fun HomeScreen(
 ) {
     val state = viewModel.state
     val showRemoveDialog = remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(state.isLoading, { viewModel.refresh() })
 
     Scaffold(
         modifier = modifier,
@@ -83,84 +93,87 @@ fun HomeScreen(
             )
         },
     ) {
-        if (state.isLoading) {
-            Box(Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-
-        if (state.configs.isEmpty()) {
-            Box(Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(imageVector = Icons.TwoTone.Info, contentDescription = null)
-                    Spacer(modifier = Modifier.padding(0.dp, 2.dp))
-                    Text(
-                        text = "No streams found",
-                        fontSize = 16.sp,
-                    )
-                }
-            }
-        }
-
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(200.dp),
-            modifier =
-                Modifier.fillMaxSize().padding(it).padding(horizontal = 12.dp, vertical = 0.dp),
-        ) {
-            items(state.configs) { config ->
-                Card(
-                    modifier =
-                        Modifier.size(width = 250.dp, height = 150.dp)
-                            .padding(vertical = 12.dp, horizontal = 12.dp)
-                            .combinedClickable(
-                                enabled = true,
-                                onClick = { onStreamClick(config) },
-                                onLongClick = { showRemoveDialog.value = true }
-                            ),
-                ) {
+        Box(modifier = Modifier.fillMaxSize().padding(it).pullRefresh(pullRefreshState)) {
+            if (state.configs.isEmpty() && !state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(
-                        Modifier.fillMaxSize().padding(vertical = 16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
+                        Icon(imageVector = Icons.TwoTone.Info, contentDescription = null)
+                        Spacer(modifier = Modifier.padding(0.dp, 2.dp))
                         Text(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            text = config.streamName,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            softWrap = true,
+                            text = "No streams found",
+                            fontSize = 16.sp,
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            modifier = Modifier.padding(horizontal = 1.dp),
-                            text = "${config.ip}:${config.port}",
-                            fontSize = 18.sp,
-                            softWrap = true,
-                        )
-                        if (config.forceRtpTcp) {
+                    }
+                }
+            }
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(200.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 0.dp),
+            ) {
+                items(state.configs) { config ->
+                    Card(
+                        modifier =
+                            Modifier.size(width = 250.dp, height = 150.dp)
+                                .padding(vertical = 12.dp, horizontal = 12.dp)
+                                .combinedClickable(
+                                    enabled = true,
+                                    onClick = { onStreamClick(config) },
+                                    onLongClick = { showRemoveDialog.value = true }
+                                ),
+                    ) {
+                        Column(
+                            Modifier.fillMaxSize().padding(vertical = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = config.streamName,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                softWrap = true,
+                            )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 modifier = Modifier.padding(horizontal = 1.dp),
-                                text = "RTP TCP",
+                                text = "${config.ip}:${config.port}",
                                 fontSize = 18.sp,
                                 softWrap = true,
-                                fontWeight = FontWeight.SemiBold
                             )
+                            if (config.forceRtpTcp) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 1.dp),
+                                    text = "RTP TCP",
+                                    fontSize = 18.sp,
+                                    softWrap = true,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
                         }
                     }
-                }
 
-                if (showRemoveDialog.value) {
-                    RemoveStreamDialog(
-                        title = "Remove ${config.streamName} stream?",
-                        onDismiss = { showRemoveDialog.value = false },
-                        onConfirm = { viewModel.removeStreamConfig(config) }
-                    )
+                    if (showRemoveDialog.value) {
+                        RemoveStreamDialog(
+                            title = "Remove ${config.streamName} stream?",
+                            onDismiss = { showRemoveDialog.value = false },
+                            onConfirm = { viewModel.removeStreamConfig(config) }
+                        )
+                    }
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = state.isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                contentColor = contentColorFor(MaterialTheme.colorScheme.surface),
+            )
         }
     }
 }

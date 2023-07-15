@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
@@ -53,7 +51,6 @@ fun ConfigScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state
-    val scrollState = rememberScrollState()
 
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
@@ -92,11 +89,7 @@ fun ConfigScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier.fillMaxSize()
-                    .verticalScroll(scrollState, reverseScrolling = true)
-                    .padding(paddingValues)
-                    .padding(24.dp, 0.dp),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -186,7 +179,6 @@ fun ConfigScreen(
                     onCheckedChange = { viewModel.onEvent(ConfigFormEvent.ForceRtpTcpChanged(it)) },
                 )
             }
-            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
