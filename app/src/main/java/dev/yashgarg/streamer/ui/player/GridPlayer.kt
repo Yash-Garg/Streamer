@@ -1,7 +1,6 @@
 package dev.yashgarg.streamer.ui.player
 
 import android.content.res.Configuration
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -14,7 +13,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.yashgarg.streamer.ui.home.HomeViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GridPlayer(viewModel: HomeViewModel = viewModel()) {
     val conf = LocalConfiguration.current
