@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "dev.yashgarg.streamer"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "dev.yashgarg.streamer"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "v1.1"
 

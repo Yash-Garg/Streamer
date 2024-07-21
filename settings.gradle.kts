@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 pluginManagement {
-    includeBuild("build-logic")
+    includeBuild("spotless")
 
     repositories {
         google()
@@ -23,4 +23,4 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Streamer"
 
-include(":app")
+include(":android")
