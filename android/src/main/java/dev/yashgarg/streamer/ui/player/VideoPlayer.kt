@@ -45,7 +45,7 @@ fun VideoPlayer(config: StreamConfig) {
     val mediaSource =
         RtspMediaSource.Factory()
             .setForceUseRtpTcp(config.forceRtpTcp)
-            .createMediaSource(MediaItem.fromUri(config.toString()))
+            .createMediaSource(MediaItem.fromUri(config.asStream()))
 
     val renderer =
         DefaultRenderersFactory(context).apply {
@@ -63,6 +63,11 @@ fun VideoPlayer(config: StreamConfig) {
                     )
                     .show()
                 super.onPlayerError(error)
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                Log.d("VideoPlayer", "onPlaybackStateChanged: $playbackState")
+                super.onPlaybackStateChanged(playbackState)
             }
         }
 

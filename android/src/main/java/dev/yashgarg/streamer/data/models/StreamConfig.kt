@@ -20,7 +20,7 @@ data class StreamConfig(
     val password: String? = null,
     @ColumnInfo(defaultValue = "0") val forceRtpTcp: Boolean
 ) : Parcelable {
-    override fun toString(): String {
+    fun asStream(): String {
         return if (username == null && password == null) {
             "rtsp://$ip:$port/$path"
         } else {
