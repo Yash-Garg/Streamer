@@ -48,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.tv.foundation.lazy.grid.itemsIndexed
 import dev.yashgarg.streamer.R
 import dev.yashgarg.streamer.data.models.StreamConfig
 

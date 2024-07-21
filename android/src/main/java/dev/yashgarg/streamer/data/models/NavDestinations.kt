@@ -1,11 +1,11 @@
 package dev.yashgarg.streamer.data.models
 
 sealed class NavDestinations(val title: String, val route: String) {
-    object HomeScreen : NavDestinations("Home", "home")
+    data object HomeScreen : NavDestinations("Home", "home")
 
-    object ConfigScreen : NavDestinations("Configure", "configure")
+    data object ConfigScreen : NavDestinations("Configure", "configure")
 
-    object PlayerScreen : NavDestinations("Player", "player")
+    data object PlayerScreen : NavDestinations("Player", "player")
 
-    object GridPlayerScreen : NavDestinations("GridPlayer", "gridplayer")
+    data object GridPlayerScreen : NavDestinations("GridPlayer", "gridplayer")
 }

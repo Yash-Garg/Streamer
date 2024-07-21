@@ -2,7 +2,6 @@ package dev.yashgarg.streamer.ui
 
 import android.net.Uri
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -23,7 +22,6 @@ import dev.yashgarg.streamer.ui.home.HomeViewModel
 import dev.yashgarg.streamer.ui.player.GridPlayer
 import dev.yashgarg.streamer.ui.player.VideoPlayer
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StreamerApp(windowSizeClass: WindowSizeClass) {
     val navController = rememberNavController()

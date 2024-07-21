@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Password
@@ -75,7 +78,7 @@ fun ConfigScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackNavigate() }) {
-                        Icon(Icons.TwoTone.ArrowBack, contentDescription = null)
+                        Icon(Icons.AutoMirrored.TwoTone.ArrowBack, contentDescription = null)
                     }
                 },
             )
@@ -89,7 +92,11 @@ fun ConfigScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(24.dp, 0.dp),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(24.dp, 0.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             ErrorTextField(
                 modifier = Modifier.fillMaxWidth(),
